@@ -29,16 +29,17 @@ namespace Iot.Device.Subscriptions.StopwatchExample
         static async Task Main(string[] args)
         {
             Console.WriteLine("Program Started");
+            var config = BuildConfiguration(args);
 
-            var (config, lcd, board) = Boilerplate(args);
-            lcd.DisplayOn = true;
-            lcd.Clear();
+            using var stopwatch = Boilerplate(config);
+            stopwatch.Lcd.DisplayOn = true;
+            stopwatch.Lcd.Clear();
 
             var subscriptionService = BuildSubscriptions(config);
 
             var clock = 0L;
             var paused = false;
-            await foreach (var subEvent in subscriptionService.Run(board, CancellationToken.None))
+            await foreach (var subEvent in subscriptionService.Run(stopwatch.Board, CancellationToken.None))
             {
                 if (subEvent.IsClock && !paused)
                 {
@@ -60,18 +61,17 @@ namespace Iot.Device.Subscriptions.StopwatchExample
                     break;
                 }
 
-                lcd.SetCursorPosition(0, 0);
-                lcd.Write($"{TimeSpan.FromTicks(clock):g}");
+                stopwatch.Lcd.SetCursorPosition(0, 0);
+                stopwatch.Lcd.Write($"{TimeSpan.FromTicks(clock):g}");
             }
-            lcd.Clear();
-            lcd.DisplayOn = false;
+            stopwatch.Lcd.Clear();
+            stopwatch.Lcd.DisplayOn = false;
             Console.WriteLine("Program Ended");
         }
 
-
-        static (Configuration config, Hd44780 lcd, GpioController board) Boilerplate(string[] args)
+        private static Configuration BuildConfiguration(string[] args)
         {
-            var config = new ConfigurationBuilder()
+            return new ConfigurationBuilder()
                 .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
                 .AddEnvironmentVariables()
                 .AddJsonFile("AppSettings.json", true)
@@ -79,9 +79,12 @@ namespace Iot.Device.Subscriptions.StopwatchExample
                 .AddCommandLine(args)
                 .Build()
                 .Get<Configuration>();
+        }
 
-            using var i2c = I2cDevice.Create(new I2cConnectionSettings(1, config.I2CBusIdInt));
-            using Pcx857x.Pcx857x driver = config.I2CDriver switch
+        private static StopwatchController Boilerplate(Configuration config)
+        {
+            var i2c = I2cDevice.Create(new I2cConnectionSettings(1, config.I2CBusIdInt));
+            Pcx857x.Pcx857x driver = config.I2CDriver switch
             {
                 Pcx857xEnum.Pca8574 => new Pca8574(i2c),
                 Pcx857xEnum.Pca8575 => new Pca8575(i2c),
@@ -89,21 +92,21 @@ namespace Iot.Device.Subscriptions.StopwatchExample
                 Pcx857xEnum.Pcf8575 => new Pcf8575(i2c),
                 _ => throw new ArgumentOutOfRangeException()
             };
-            using var lcdController = new GpioController(PinNumberingScheme.Logical, driver);
+            var lcdController = new GpioController(PinNumberingScheme.Logical, driver);
 
-            using Hd44780 lcd = config.LcdSize switch
+            Hd44780 lcd = config.LcdSize switch
             {
                 LcdEnum.Lcd16x2 => new Lcd1602(0, 2, new[] { 4, 5, 6, 7 }, 3, 0.1f, 1, lcdController),
                 LcdEnum.Lcd20x4 => new Lcd2004(0, 2, new[] { 4, 5, 6, 7 }, 3, 0.1f, 1, lcdController),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            using var boardController = new GpioController();
+            var boardController = new GpioController();
 
-            return (config, lcd, boardController);
+            return new StopwatchController(i2c, driver, lcdController, lcd, boardController);
         }
 
-        static ISubscriptionService BuildSubscriptions(Configuration config)
+        private static ISubscriptionService BuildSubscriptions(Configuration config)
         {
             var collection = new SubscriptionCollection
             {
