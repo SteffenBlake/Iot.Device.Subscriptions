@@ -21,4 +21,4 @@ mv /temp/*/Source/Iot.Device.Subscriptions.StopwatchExample/Deploy/* /opt/Stopwa
 rm -R /temp
 
 chmod 755 /opt/StopwatchExample/Iot.Device.Subscriptions.StopwatchExample
-echo "Install complete, execute '/opt/StopwatchExample/Iot.Device.Subscriptions.StopwatchExampl' to run"
+echo "Install complete, execute '/opt/StopwatchExample/Iot.Device.Subscriptions.StopwatchExample' to run"

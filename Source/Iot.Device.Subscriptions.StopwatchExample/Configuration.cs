@@ -53,6 +53,16 @@ namespace Iot.Device.Subscriptions.StopwatchExample
         public PinMode BtnPinMode { get; set; }
 
         /// <summary>
+        /// Sensitivity to delay button events after detection, in ticks
+        /// </summary>
+        public long BtnSensitivityTicks => TimeSpan.FromMilliseconds(BtnSensitivityMs).Ticks;
+
+        /// <summary>
+        /// Sensitivity to delay button events after detection, in milliseconds
+        /// </summary>
+        public long BtnSensitivityMs { get; set; }
+
+        /// <summary>
         /// Whether a Reset Button is used
         /// </summary>
         public bool ResetBtnEnabled => ResetBtnPin > -1;

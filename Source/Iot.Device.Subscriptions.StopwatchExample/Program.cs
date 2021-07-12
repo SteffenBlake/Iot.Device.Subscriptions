@@ -38,25 +38,32 @@ namespace Iot.Device.Subscriptions.StopwatchExample
             var subscriptionService = BuildSubscriptions(config);
 
             var clock = 0L;
+            var buttonDelay = config.BtnSensitivityTicks;
             var paused = false;
             await foreach (var subEvent in subscriptionService.Run(stopwatch.Board, CancellationToken.None))
             {
+                buttonDelay += subEvent.Delta;
+
                 if (subEvent.IsClock && !paused)
                 {
                     clock += subEvent.Delta;
                 }
 
-                if (subEvent.PinNumber == config.ResetBtnPin)
+                if (subEvent.PinNumber == config.ResetBtnPin && buttonDelay > config.BtnSensitivityTicks)
                 {
                     clock = 0L;
+                    stopwatch.Lcd.Clear();
+                    buttonDelay = 0L;
                 }
 
-                if (subEvent.PinNumber == config.PauseBtnPin)
+                if (subEvent.PinNumber == config.PauseBtnPin && buttonDelay > config.BtnSensitivityTicks)
                 {
                     paused = !paused;
+                    stopwatch.Lcd.Clear();
+                    buttonDelay = 0L;
                 }
 
-                if (subEvent.PinNumber == config.StopBtnPin)
+                if (subEvent.PinNumber == config.StopBtnPin && buttonDelay > config.BtnSensitivityTicks)
                 {
                     break;
                 }
@@ -101,7 +108,7 @@ namespace Iot.Device.Subscriptions.StopwatchExample
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            var boardController = new GpioController();
+            var boardController = new GpioController(PinNumberingScheme.Board);
 
             return new StopwatchController(i2c, driver, lcdController, lcd, boardController);
         }

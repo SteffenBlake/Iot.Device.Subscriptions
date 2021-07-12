@@ -37,9 +37,21 @@ namespace Iot.Device.Subscriptions
         /// <inheritdoc />
         public async IAsyncEnumerable<ISubscriptionEvent> Run(GpioController controller, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
+            
             foreach (var subscription in Subscriptions.GroupBy(s => s.PinNumber))
             {
-                controller.OpenPin(subscription.Key, subscription.First().PinMode);
+                try
+                {
+                    if (!controller.IsPinModeSupported(subscription.Key, subscription.First().PinMode))
+                    {
+                        throw new InvalidOperationException($"Pin error on pin #{subscription.Key}, PinMode '{subscription.First().PinMode:G}' not supported");
+                    }
+                    controller.OpenPin(subscription.Key, subscription.First().PinMode);
+                }
+                catch (ArgumentException e)
+                {
+                    throw new InvalidOperationException($"Pin error on pin #{subscription.Key}, see inner exception for details.", e);
+                }
             }
 
             var timestamp = DateTime.Now.Ticks;
