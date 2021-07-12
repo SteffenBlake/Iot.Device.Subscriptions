@@ -1,10 +1,82 @@
 # Iot.Device.Subscriptions
 
+Subscriptions are a simple and lightweight architecture to easily subscribe to IoT style GPIO pin events using the new C# feature `IAsyncEnumerable`
 
+Documentation on how to interact with the `IAsyncEnumerable` interface can be found here: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-8#asynchronous-streams
 
 # How to Use
 
-WIP
+Nuget Package: https://www.nuget.org/packages/Iot.Device.Subscriptions/
+
+Step 1: Build the Subscription collection and configure it.
+
+```
+var collection = new SubscriptionCollection
+{
+    ClockEnabled = true, // Optional, defaults false
+    ClockRate = TimeSpan.FromMilliseconds(250) // Optional, defaults to 500ms
+};
+
+```
+
+Step 2: Add subscriptions to pins via the collection's fluent interface
+
+```
+collection
+    .Subscribe(19, PinMode.InputPullUp, PinEventTypes.Rising)
+    .Subscribe(21, PinMode.InputPullUp, PinEventTypes.Rising)
+    .Subscribe(23, PinMode.InputPullUp, PinEventTypes.Rising);
+```
+
+Step 3: Build the service
+
+```
+var subscriptionService = collection.Build();
+```
+
+Step 4: Await events, passing in a reference to your GpioController for your board!
+
+```
+var clock = 0L;
+var paused = false;
+await foreach (var subEvent in subscriptionService.Run(myGpioController, CancellationToken.None))
+{
+  if (subEvent.IsClock && !paused)
+  {
+      clock += subEvent.Delta;
+  }
+  if (subEvent.PinNumber == MyConstants.RESET_PIN) {
+    clock = 0L;
+  }
+  if (subEvent.PinNumber == MyConstants.PAUSE_PIN) {
+    paused = !paused;
+  }
+}
+```
+
+And thats it, its that easy! No more complicated juggling of numerous awaitable asynch events that could all be happening at any time, the SubscriptionService cohesively brings all your events together into a single awaitable loop that is thread safe and automatically multi-core.
+
+# A note about event Delta Value
+
+You may be noticing the lines regarding `ClockEnabled`, `ClockRate`, `subEvent.IsClock` and `subEvent.Delta`. This is a special additional event you can opt into by setting `ClockEnabled = true` on your initial SubscriptionCollection.
+
+This event will fire periodically *at minimum* every n milliseconds, set via `ClockRate` on the Subscription Collection. "At Minimum" matters here because it is not *gaurenteed* to actually fire at that time.
+
+Instead, to get the *actual* amount of time that has transpired, the `Delta` value of the Subscription event must be used. This value will only be set on Clock events, which will be noted by the fact that its `PinNumber` is `-1`, and there is a handy shorthand for this, `.IsClock`
+
+The value of `Delta` is in Ticks, and represents how many Ticks have transpired since the *last* Clock event fired.
+
+Using this value, one can keep track of *actual* time that has transpired, and can be considered synonymous with the "frame rate" of your program. This is exceptionally useful for things like:
+
+1. Physics simulations
+
+2. Motors, servos, or any other form of physical actuating mechanism being controlled
+
+3. Animations
+
+4. Timers, clocks, stopwatches, etc
+
+To see an example of this project in use, please try out the example project via the steps below!
 
 # How to use the Example project
 
