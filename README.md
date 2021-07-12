@@ -42,7 +42,7 @@ Connect the following:
 
 Invoke the following on your target machine as root.
 
-`bash <(curl -s Install.sh)`
+`bash <(curl -s https://raw.githubusercontent.com/SteffenBlake/Iot.Device.Subscriptions/main/Source/Iot.Device.Subscriptions.StopwatchExample/Install.sh)`
 
 ## Deploy Windows > Debian/Raspbian/Ubuntu/etc
 
