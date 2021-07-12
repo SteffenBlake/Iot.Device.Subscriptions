@@ -4,6 +4,8 @@ Subscriptions are a simple and lightweight architecture to easily subscribe to I
 
 Documentation on how to interact with the `IAsyncEnumerable` interface can be found here: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-8#asynchronous-streams
 
+This package wraps around the functionality built in Iot.Device.Bindings, documentation on how to use it can be found here: https://github.com/dotnet/iot
+
 # How to Use
 
 Nuget Package: https://www.nuget.org/packages/Iot.Device.Subscriptions/
