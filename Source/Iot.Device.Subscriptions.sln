@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Device.Subscriptions", "Iot.Device.Subscriptions\Iot.Device.Subscriptions.csproj", "{D98DC98C-8823-4455-9A62-DE8357009D5D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DECD5D88-FF09-4371-8447-FEBF8958AD6D} = {DECD5D88-FF09-4371-8447-FEBF8958AD6D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Device.Subscriptions.Abstractions", "Iot.Device.Subscriptions.Abstractions\Iot.Device.Subscriptions.Abstractions.csproj", "{DECD5D88-FF09-4371-8447-FEBF8958AD6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot.Device.Subscriptions.StopwatchExample", "Iot.Device.Subscriptions.StopwatchExample\Iot.Device.Subscriptions.StopwatchExample.csproj", "{5D088410-9A55-4A67-87DF-A8370CC6ADE5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D98DC98C-8823-4455-9A62-DE8357009D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98DC98C-8823-4455-9A62-DE8357009D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98DC98C-8823-4455-9A62-DE8357009D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D98DC98C-8823-4455-9A62-DE8357009D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DECD5D88-FF09-4371-8447-FEBF8958AD6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DECD5D88-FF09-4371-8447-FEBF8958AD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DECD5D88-FF09-4371-8447-FEBF8958AD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DECD5D88-FF09-4371-8447-FEBF8958AD6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D088410-9A55-4A67-87DF-A8370CC6ADE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D088410-9A55-4A67-87DF-A8370CC6ADE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D088410-9A55-4A67-87DF-A8370CC6ADE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D088410-9A55-4A67-87DF-A8370CC6ADE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C811AB2E-C514-4BB8-B66E-5F6B4A8B2574}
+	EndGlobalSection
+EndGlobal
