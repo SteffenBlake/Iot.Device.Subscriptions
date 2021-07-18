@@ -2,9 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <Authors>Steffen Cole Blake</Authors>
+    <Company>Steffen Cole Blake</Company>
+    <Description>Abstractions library for Iot.Device.Bindings that enables IAsyncEnumerable behaviors for subscription to pin events</Description>
+    <Copyright>©2021 Steffen Cole Blake</Copyright>
+    <PackageProjectUrl>https://github.com/SteffenBlake/Iot.Device.Subscriptions</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/SteffenBlake/Iot.Device.Subscriptions</RepositoryUrl>
+    <PackageTags>Github</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iot.Device.Bindings" Version="1.4.0" />
+    <PackageReference Include="Iot.Device.Bindings" Version="1.5.0" />
   </ItemGroup>
 </Project>
